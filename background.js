@@ -4,7 +4,7 @@ chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
   // Use the token.
 
   chrome.extension.getBackgroundPage().console.log("got oauth..");
-  onAuthorized(token);
+  //onAuthorized(token);
 });
 
 function recent(date) {
