@@ -138,15 +138,16 @@ window.addEventListener('load', function(evt) {
 
 			console.log(allTimes);
 			//console.log(allTimes.length);
+			
 
-			var temp = document.getElementById('name');
+			/*var temp = document.getElementById('name');
 		  	if(temp != null) {
-		    	temp.value = "Kevin";
+		    	
 		    	console.log(temp.value);
 
 		    	button = document.getElementsByTagName("input");
 		    	button[button.length-1].click();
-		    }
+		    }*/
 		    //console.log(eFinishDay.getDay());
 		    console.log(eFinishDay);
 		    console.log(realStartDay);
@@ -154,31 +155,41 @@ window.addEventListener('load', function(evt) {
 		    console.log("number of days: " + numDays);
 		    console.log(eventlist);
 
-		    for(var a = 0; a < allTimes.length; a++) {
-		    	for(var b = 0; b < allTimes[a].length; b++) {
-		    		if(allTimes[a][b] === false) {
-		    			var indexTime = startDate.getTime()/1000 + 86400*a + 15*60*b;
-		    			var scriptNode  = document.createElement('script');
-		    			scriptNode.textContent = "SelectFromHere(" + indexTime + "); console.log(IsMouseDown);"
-						document.body.appendChild(scriptNode);
-						var scriptNode2 = document.createElement('script');
-						scriptNode2.textContent = "SelectToHere(" + indexTime + "); console.log(IsMouseDown);"
-						document.body.appendChild(scriptNode2);
-						var scriptNode3 = document.createElement('script');
-						scriptNode3.textContent = "MouseUp(); SelectStop(); ReColor(); console.log(IsMouseDown);"
-						document.body.appendChild(scriptNode3);	
-						//console.log(indexTime);
-		    		}
-		    	}
-		    }
+
+	    	var temp = document.getElementById('name');
+			temp.value = "Pranav";
+			var scriptNode  = document.createElement('script');
+			scriptNode.textContent = "ProcessLogin();console.log(UserID)"
+			document.body.appendChild(scriptNode);
+
+		    setTimeout(function(){
+			    for(var a = 0; a < allTimes.length; a++) {
+			    	for(var b = 0; b < allTimes[a].length; b++) {
+			    		if(allTimes[a][b] === false) {
+			    			var indexTime = startDate.getTime()/1000 + 86400*a + 15*60*b;
+			    			var scriptNode  = document.createElement('script');
+			    			scriptNode.textContent = "SelectFromHere(" + indexTime + "); console.log(IsMouseDown);";
+							document.body.appendChild(scriptNode);
+							var scriptNode2 = document.createElement('script');
+							scriptNode2.textContent = "SelectToHere(" + indexTime + "); console.log(IsMouseDown);";
+							document.body.appendChild(scriptNode2);
+							var scriptNode3 = document.createElement('script');
+							scriptNode3.textContent = "MouseUp(); SelectStop(); console.log(IsMouseDown);";
+							document.body.appendChild(scriptNode3);
+							//console.log(indexTime);
+			    		}
+			    	}
+			    }
+			}, 200);
+
+		    /*var scriptNode1  = document.createElement('script');
+			scriptNode1.textContent = "ReColorGroup();"
+			document.body.appendChild(scriptNode1);*/
 		        
 			
 		};
     	x.send();
 	};
-
-	
-
 
 });
 
