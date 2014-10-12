@@ -1,6 +1,7 @@
 window.addEventListener('load', function(evt) {
 	console.log('starting');
 
+
 	var mytoken;
 	chrome.extension.sendMessage({text:"getStuff"},function(response){
 		console.log("getting the message..");
@@ -61,6 +62,7 @@ window.addEventListener('load', function(evt) {
         console.log("here is eventlist");
     	console.log(eventlist);
     	//console.log(eventlist[0]);
+    	var date = new Date();
 
     	var results = $("div[id*='YouTime']");
 		var first = results[0].id;
@@ -91,7 +93,7 @@ window.addEventListener('load', function(evt) {
 		}
 
 		console.log(allTimes);
-	  }
+	  
 
     	//SelectFromHere()
     	//SelectFromHere(eventlist[0][0]/1000);
