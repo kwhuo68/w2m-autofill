@@ -19,11 +19,13 @@ window.addEventListener('load', function(evt) {
 	var last = results[results.length-1].id;
 	var start = first.substr(7, first.length-1) + "000";
 	console.log(start);
-	var startDate = new Date(parseInt(start) + (date.getTimezoneOffset() * 60 * 1000));
+	var startDate = new Date(parseInt(start));
+	//+ (date.getTimezoneOffset() * 60 * 1000))
 	console.log(startDate);
 	var finish = last.substr(7, last.length-1) + "000";
 	console.log(finish);
-	var finishDate = new Date(parseInt(finish) + (date.getTimezoneOffset() * 60 * 1000) + (15 * 60 * 1000));
+	var finishDate = new Date(parseInt(finish));
+	//+ (date.getTimezoneOffset() * 60 * 1000) + (15 * 60 * 1000)
 	console.log(finishDate);
 	var days = new Date(finishDate - startDate);
 	console.log(days.getDate());
@@ -94,10 +96,13 @@ window.addEventListener('load', function(evt) {
 	    	console.log(eventlist);
 
 	    	// Set all events in allTimes to true
+	    	var realStartDay = eventlist[0].start.day;
 			for (var i = 0; i < eventlist.length; i++){
 				var event = eventlist[i];
 				var eStartDay   = event.start.day;
+				console.log(eStartDay);
 				var eStartHour  = event.start.hour;
+				console.log("start hour:" + eStartHour);
 				var eStartMins  = event.start.min;
 				var eFinishDay  = event.end.day;
 				var eFinishHour = event.end.hour;
@@ -132,6 +137,7 @@ window.addEventListener('load', function(evt) {
 			}
 
 			console.log(allTimes);
+			//console.log(allTimes.length);
 
 			var temp = document.getElementById('name');
 		  	if(temp != null) {
@@ -141,15 +147,32 @@ window.addEventListener('load', function(evt) {
 		    	button = document.getElementsByTagName("input");
 		    	button[button.length-1].click();
 		    }
-			var scriptNode         = document.createElement ('script');
-			scriptNode.textContent = "SelectFromHere(1412698500); console.log(IsMouseDown);"
-			document.body.appendChild (scriptNode);
-			var scriptNode2         = document.createElement ('script');
-			scriptNode2.textContent = "SelectToHere(1412703900); console.log(IsMouseDown);"
-			document.body.appendChild (scriptNode2);
-			var scriptNode3         = document.createElement ('script');
-			scriptNode3.textContent = " ReColor(); SelectStop(); console.log(IsMouseDown);"
-			document.body.appendChild (scriptNode3);
+		    //console.log(eFinishDay.getDay());
+		    console.log(eFinishDay);
+		    console.log(realStartDay);
+		    numDays = allTimes.length;
+		    console.log("number of days: " + numDays);
+		    console.log(eventlist);
+
+		    for(var a = 0; a < allTimes.length; a++) {
+		    	for(var b = 0; b < allTimes[a].length; b++) {
+		    		if(allTimes[a][b] === false) {
+		    			var indexTime = startDate.getTime()/1000 + 86400*a + 15*60*b;
+		    			var scriptNode  = document.createElement('script');
+		    			scriptNode.textContent = "SelectFromHere(" + indexTime + "); console.log(IsMouseDown);"
+						document.body.appendChild(scriptNode);
+						var scriptNode2 = document.createElement('script');
+						scriptNode2.textContent = "SelectToHere(" + indexTime + "); console.log(IsMouseDown);"
+						document.body.appendChild(scriptNode2);
+						var scriptNode3 = document.createElement('script');
+						scriptNode3.textContent = "MouseUp(); SelectStop(); ReColor(); console.log(IsMouseDown);"
+						document.body.appendChild(scriptNode3);	
+						//console.log(indexTime);
+		    		}
+		    	}
+		    }
+		        
+			
 		};
     	x.send();
 	};
