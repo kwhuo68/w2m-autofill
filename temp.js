@@ -5,28 +5,50 @@ window.addEventListener('load', function(evt) {
 	var mytoken;
 	chrome.extension.sendMessage({text:"getStuff"},function(response){
 		console.log("getting the message..");
-  //This is where the stuff you want from the background page will be
   		console.log(response.type);
   		mytoken = response.type;
   		onAuthorized(mytoken);
 	});
 
-	//var evenlist = [];
-	var temp = document.getElementById('name');
-  	if(temp != null) {
-    	temp.value = "Kevin";
-    	console.log(temp.value);
+	
 
-    	button = document.getElementsByTagName("input");
-    	button[button.length-1].click();
-    }
+	var date = new Date();
+
+	var results = $("div[id*='YouTime']");
+	var first = results[0].id;
+	var last = results[results.length-1].id;
+	var start = first.substr(7, first.length-1) + "000";
+	console.log(start);
+	var startDate = new Date(parseInt(start) + (date.getTimezoneOffset() * 60 * 1000));
+	console.log(startDate);
+	var finish = last.substr(7, last.length-1) + "000";
+	console.log(finish);
+	var finishDate = new Date(parseInt(finish) + (date.getTimezoneOffset() * 60 * 1000) + (15 * 60 * 1000));
+	console.log(finishDate);
+	var days = new Date(finishDate - startDate);
+	console.log(days.getDate());
+	var hours = (finishDate.getHours() - startDate.getHours());
+	console.log(hours);
+	var minutes = (finishDate.getMinutes() - startDate.getMinutes());
+	console.log(minutes);
+	var totalIntervals = (hours * 4) + (minutes/15);
+	console.log(totalIntervals);
+	var allTimes = [];
+	for (var i = 0; i < days.getDate(); i++){
+		var temp = [];
+		for (var j = 0; j < totalIntervals; j++){
+			temp.push(false);
+		}
+		allTimes.push(temp);
+	}
+
 
 	function onAuthorized(token) {
 		console.log('starting authorization..');
 		var x = new XMLHttpRequest();
-  		var starttime = '2014-10-06T02:29:42.079Z';
-  		var endtime = '2014-10-07T02:29:42.079Z';
-  		x.open('GET', 'https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json&timeMin=' + starttime + '&access_token=' + token);
+  		var starttime = startDate.toISOString();
+  		var endtime = finishDate.toISOString();
+  		x.open('GET', 'https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json&timeMin=' + starttime + '&timeMax=' + endtime + '&access_token=' + token);
   		var eventlist = [];
   		x.onload = function() {
   			var jsonResponse = JSON.parse(x.response);
@@ -38,7 +60,7 @@ window.addEventListener('load', function(evt) {
       			var entry = items[i];
       			console.log("entry is: ");
       			console.log(entry);
-      			if(entry['start'] !== undefined) {
+      			if(entry['start'] !== undefined && entry.start.dateTime !== undefined) {
       				//accounts for cancellation entries, i.e. no start/end objects.
       				var start = entry['start'];
 	      			console.log("start is:");
@@ -52,56 +74,84 @@ window.addEventListener('load', function(evt) {
 	      			//console.log(eventstart2);
 	      			var eventend = end['dateTime'];
 	      			var eventend2 = new Date(eventend);
-	      			var tup = [[eventstart2.getDay(), eventstart2.getHours(), eventstart2.getMinutes()], 
-	      				[eventend2.getTime(), eventend2.getHours(), eventend2.getMinutes()]];
+	      			var tup = {
+	      				"start" : {
+		      				"day"  : eventstart2.getDay(), 
+		      				"hour" : eventstart2.getHours(), 
+		      				"min"  : eventstart2.getMinutes()
+	      				}, 
+		      			"end" : {
+		      				"day"  : eventend2.getDay(), 
+		      				"hour" : eventend2.getHours(), 
+		      				"min"  : eventend2.getMinutes()
+	      				}
+	      			};
 	      			eventlist.push(tup);
       			}
       			
-      		}  
-        //alert(x.response);
-        console.log("here is eventlist");
-    	console.log(eventlist);
-    	//console.log(eventlist[0]);
-    	var date = new Date();
+      		}
+	        console.log("here is eventlist");
+	    	console.log(eventlist);
 
-    	var results = $("div[id*='YouTime']");
-		var first = results[0].id;
-		var last = results[results.length-1].id;
-		var start = first.substr(7, first.length-1) + "000";
-		console.log(start);
-		var startDate = new Date(parseInt(start) + (date.getTimezoneOffset() * 60 * 1000));
-		console.log(startDate);
-		var finish = last.substr(7, last.length-1) + "000";
-		console.log(finish);
-		var finishDate = new Date(parseInt(finish) + (date.getTimezoneOffset() * 60 * 1000) + (15 * 60 * 1000));
-		console.log(finishDate);
-		var days = new Date(finishDate - startDate);
-		console.log(days.getDate());
-		var hours = (finishDate.getHours() - startDate.getHours());
-		console.log(hours);
-		var minutes = (finishDate.getMinutes() - startDate.getMinutes());
-		console.log(minutes);
-		var totalIntervals = (hours * 4) + (minutes/15);
-		console.log(totalIntervals);
-		var allTimes = [];
-		for (var i = 0; i < days.getDate(); i++){
-			var temp = [];
-			for (var j = 0; j < totalIntervals; j++){
-				temp.push(false);
+	    	// Set all events in allTimes to true
+			for (var i = 0; i < eventlist.length; i++){
+				var event = eventlist[i];
+				var eStartDay   = event.start.day;
+				var eStartHour  = event.start.hour;
+				var eStartMins  = event.start.min;
+				var eFinishDay  = event.end.day;
+				var eFinishHour = event.end.hour;
+				var eFinishMins = event.end.min;
+				if (eStartHour >= startDate.getHours() && eStartHour <= finishDate.getHours()){
+					var startIndex = (eStartHour * 4) + (eStartMins/15) - 
+									((startDate.getHours() * 4) + (startDate.getMinutes()/15));
+					var durationIndex = (eFinishHour * 4) + (eFinishMins/15) - 
+									((eStartHour * 4) + (eStartMins/15));
+					var eDay = eStartDay - startDate.getDay();
+					console.log(startIndex + " | " + durationIndex);
+						
+					for(var b = startIndex; b < startIndex + durationIndex; b++){
+						allTimes[eDay][b] = true;
+						console.log(b);
+					}	
+					
+				}
+				else if (eFinishHour >= startDate.getHours() && eFinishHour <= finishDate.getHours()){
+					var startIndex = (eFinishHour * 4) + (eFinishMins/15) - 
+									((startDate.getHours() * 4) + (startDate.getMinutes()/15));
+					var durationIndex = (eFinishHour * 4) + (eFinishMins/15) - 
+									((startDate.getHours() * 4) + (startDate.getMinutes()/15));
+					var eDay = eFinishDay - startDate.getDay();
+					console.log(startIndex + " | " + durationIndex);
+						
+					for(var b = startIndex; b > startIndex - durationIndex; b--){
+						allTimes[eDay][b] = true;
+						console.log(b);
+					}
+				}
 			}
-			allTimes.push(temp);
-		}
 
-		console.log(allTimes);
-	  
+			console.log(allTimes);
 
-    	//SelectFromHere()
-    	//SelectFromHere(eventlist[0][0]/1000);
+			var temp = document.getElementById('name');
+		  	if(temp != null) {
+		    	temp.value = "Kevin";
+		    	console.log(temp.value);
 
-    	};
+		    	button = document.getElementsByTagName("input");
+		    	button[button.length-1].click();
+		    }
+			var scriptNode         = document.createElement ('script');
+			scriptNode.textContent = "SelectFromHere(1412698500); console.log(IsMouseDown);"
+			document.body.appendChild (scriptNode);
+			var scriptNode2         = document.createElement ('script');
+			scriptNode2.textContent = "SelectToHere(1412703900); console.log(IsMouseDown);"
+			document.body.appendChild (scriptNode2);
+			var scriptNode3         = document.createElement ('script');
+			scriptNode3.textContent = " ReColor(); SelectStop(); console.log(IsMouseDown);"
+			document.body.appendChild (scriptNode3);
+		};
     	x.send();
-    	
-    //chrome.extension.getBackgroundPage().console.log(evenlist);
 	};
 
 	

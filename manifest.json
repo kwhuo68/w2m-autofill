@@ -2,7 +2,7 @@
   "name": "when2meet scheduler",
   "description": "hackRU 2014 fall",
   "version": "0.1",
-  "permissions": ["contextMenus", "identity"],
+  "permissions": ["contextMenus", "identity", "activeTab", "tabs", "http://*/*", "https://*/*"],
   "manifest_version": 2,
   "background": {
     "persistent": false,
@@ -12,7 +12,7 @@
     "default_icon": "calculator-16.png"
   },
   "oauth2": {
-    "client_id": "956653605342-lsenesjmdt2jfapn9esa0pihj9b2fhtv.apps.googleusercontent.com",
+    "client_id": "956653605342-n40pn5h56pcm3cpn5f1etmj5ejkik0n6.apps.googleusercontent.com",
 
     "scopes": ["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/calendar.readonly"]
   },
