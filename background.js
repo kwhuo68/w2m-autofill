@@ -7,12 +7,43 @@ chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
   onAuthorized(token);
 });
 
+function recent(date) {
+  return date.dateTime >= "2014-08";
+};
+
 function onAuthorized(token) {
   chrome.extension.getBackgroundPage().console.log("starting GET..");
   var x = new XMLHttpRequest();
-    x.open('GET', 'https://www.googleapis.com/calendar/v3/calendars/primary?alt=json&access_token=' + token);
+  //var datetime = '2014-10-11T02:29:42.079Z';
+  var starttime = '2014-10-11T02:29:42.079Z';
+  var endtime = '2014-10-12T02:29:42.079Z';
+    x.open('GET', 'https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json&timeMin=' + starttime + '&access_token=' + token);
     x.onload = function() {
-        alert(x.response);
+      /*for(var key in x.response['items']) {
+        var s = key['start'];
+        chrome.extension.getBackgroundPage().console.log(s);
+      } */
+      /*for(evt in x.response['kind']) {
+        chrome.extension.getBackgroundPage().console.log('----new event -----');
+        chrome.extension.getBackgroundPage().console.log(evt);
+      }*/
+      var jsonResponse = JSON.parse(x.response);
+      //chrome.extension.getBackgroundPage().console.log(jsonResponse['items']);
+      var items = jsonResponse['items'];
+      var len = items.length;
+      for(var i = 0; i < len; i++) {
+        var entry = items[i];
+        var start = entry['start'];
+        var end = entry['end'];
+        var eventstart = start['dateTime'];
+        var eventend = end['dateTime'];
+        //console.log(datetime);
+        //var dateTime = start['dateTime'];
+        //console.log(dateTime);
+        //chrome.extension.getBackgroundPage().console.log(start['dateTime']);
+      }
+      
+        //alert(x.response);
     };
     x.send();
   chrome.extension.getBackgroundPage().console.log("sent GET..");
