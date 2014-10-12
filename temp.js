@@ -3,10 +3,12 @@ window.addEventListener('load', function(evt) {
 
 
 	var mytoken;
+	var myName;
 	chrome.extension.sendMessage({text:"getStuff"},function(response){
 		console.log("getting the message..");
   		console.log(response.type);
   		mytoken = response.type;
+  		myName = response.name;
   		onAuthorized(mytoken);
 	});
 
@@ -155,7 +157,7 @@ window.addEventListener('load', function(evt) {
 
 
 	    	var temp = document.getElementById('name');
-			temp.value = "Pranav";
+			temp.value = myName;
 			var scriptNode  = document.createElement('script');
 			scriptNode.textContent = "ProcessLogin();console.log(UserID)"
 			document.body.appendChild(scriptNode);

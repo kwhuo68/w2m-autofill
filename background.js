@@ -9,10 +9,12 @@ chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
       console.log("sent message..");
     });
 
+
+
 chrome.extension.onMessage.addListener(function(message,sender,sendResponse){
   if(message.text == "getStuff"){
-    
-    sendResponse({type: mytoken});
+    var myName = localStorage['myName'];
+    sendResponse({type: mytoken, name: myName});
   }
 });
 
