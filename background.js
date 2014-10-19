@@ -1,20 +1,29 @@
-chrome.extension.getBackgroundPage().console.log("testing init of oauth..");
-
-var mytoken;
+var mytoken; var cal;
 
 chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
       chrome.extension.getBackgroundPage().console.log("got oauth..");
       mytoken = token;
-      console.log(token);
-      console.log("sent message..");
-    });
+      var x = new XMLHttpRequest();
+      x.open('GET', 'https://www.googleapis.com/calendar/v3/users/me/calendarList?alt=json' + '&access_token=' + token);
+	  x.onload = function(){
+		  var jsonResponse = JSON.parse(x.response);
+		  var obj = [];
+		  for (var i= 0; i< jsonResponse.items.length; i++){
+		  	obj.push({"name" : jsonResponse.items[i].summary, "selected" : false, "id": jsonResponse.items[i].id});
+		  }
+		  localStorage['myCals'] = JSON.stringify(obj);
+		  cal = obj;
+	  };
+      x.send();
+});
 
 
 
 chrome.extension.onMessage.addListener(function(message,sender,sendResponse){
   if(message.text == "getStuff"){
     var myName = localStorage['myName'];
-    sendResponse({type: mytoken, name: myName});
+    var obj = JSON.parse(localStorage['myCals']);
+    sendResponse({type: mytoken, name: myName, cal: obj});
   }
 });
 
