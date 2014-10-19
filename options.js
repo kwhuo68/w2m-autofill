@@ -4,7 +4,6 @@ var calendars = [{"name" : "Default", selected: true, id: "primary"}]
 function loadOptions() {
 	var myName = localStorage["myName"];
 	var myCals = JSON.parse(localStorage["myCals"]);
-	console.log(myCals);
 
 	if (myName == undefined || myName.length > 20)
 		myName = defaultName;

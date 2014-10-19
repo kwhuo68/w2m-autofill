@@ -1,11 +1,10 @@
 var mytoken; var cal;
 
 chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-      chrome.extension.getBackgroundPage().console.log("got oauth..");
       mytoken = token;
       var x = new XMLHttpRequest();
       x.open('GET', 'https://www.googleapis.com/calendar/v3/users/me/calendarList?alt=json' + '&access_token=' + token);
-	  x.onload = function(){
+	    x.onload = function(){
 		  var jsonResponse = JSON.parse(x.response);
 		  var obj = [];
 		  for (var i= 0; i< jsonResponse.items.length; i++){

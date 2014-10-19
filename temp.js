@@ -26,6 +26,10 @@ window.addEventListener('load', function(evt) {
 		var days = new Date(finishDate - startDate);
 		var hours = (finishDate.getHours() - startDate.getHours());
 		var minutes = (finishDate.getMinutes() - startDate.getMinutes());
+		if (hours < 0)
+			hours += 24;
+		if (minutes < 0)
+			minutes += (60);
 		var totalIntervals = (hours * 4) + (minutes/15);
 		var allTimes = [];
 		for (var i = 0; i < days.getDate(); i++){
@@ -138,7 +142,7 @@ window.addEventListener('load', function(evt) {
 					var eFinishDay  = event.end.day;
 					var eFinishHour = event.end.hour;
 					var eFinishMins = event.end.min;
-					if (eStartHour >= startDate.getHours() && eStartHour <= finishDate.getHours()){
+					if (eStartHour >= startDate.getHours()){
 						var startIndex = (eStartHour * 4) + (eStartMins/15) - 
 										((startDate.getHours() * 4) + (startDate.getMinutes()/15));
 						var durationIndex = (eFinishHour * 4) + (eFinishMins/15) - 
@@ -150,7 +154,7 @@ window.addEventListener('load', function(evt) {
 						}
 						
 					}
-					else if (eFinishHour >= startDate.getHours() && eFinishHour <= finishDate.getHours()){
+					else if (eFinishHour >= startDate.getHours()){
 						var startIndex = (eFinishHour * 4) + (eFinishMins/15) - 
 										((startDate.getHours() * 4) + (startDate.getMinutes()/15));
 						var durationIndex = (eFinishHour * 4) + (eFinishMins/15) - 
@@ -165,7 +169,6 @@ window.addEventListener('load', function(evt) {
 			}
 
 		    numDays = allTimes.length;
-
 
 	    	var temp = document.getElementById('name');
 			temp.value = myName;
@@ -187,7 +190,6 @@ window.addEventListener('load', function(evt) {
 							var scriptNode3 = document.createElement('script');
 							scriptNode3.textContent = "MouseUp(); SelectStop();";
 							document.body.appendChild(scriptNode3);
-							//console.log(indexTime);
 			    		}
 			    	}
 			    }
