@@ -1,5 +1,4 @@
-var defaultName = "Fill in name here";
-var calendars = [{"name" : "Default", selected: true, id: "primary"}]
+var defaultName = "";
 
 function loadOptions() {
 	var myName = localStorage["myName"];
@@ -11,14 +10,16 @@ function loadOptions() {
 	var select = document.getElementById("name");
 	select.value = myName;
 
-	if (myCals == undefined || myCals == [])
-		myCals = calendars;
-
-
 	for(var i=0; i<myCals.length; i++){
 		var name = myCals[i].name;
-		var radioBtn = $('<input type="radio" name="calendarPicker" id="' + i + '" /><label for="' + i + '">' + name + '</label>');
-	    radioBtn.appendTo('#target');
+		var radioBtn;
+		if (myCals[i].selected){
+			radioBtn = $('<input type="radio" name="calendarPicker" checked="true" id="' + i + '" /><label for="' + i + '">' + name + '</label>');
+	    	radioBtn.appendTo('#target');
+	    } else {
+	    	radioBtn = $('<input type="radio" name="calendarPicker" id="' + i + '" /><label for="' + i + '">' + name + '</label>');
+	    	radioBtn.appendTo('#target');
+	    }
 	}
 }
 
@@ -35,14 +36,6 @@ function saveOptions() {
 	localStorage['myCals'] = JSON.stringify(myCals);
 }
 
-function eraseOptions() {
-	localStorage["myName"] = defaultName;
-	location.reload();
-	$('input[name="calendarPicker"]').prop('checked', false);
-	localStorage['myCals'] = JSON.stringify(calendars);
-
-}
-
 $(document).ready(function(){
 	loadOptions();
 	$('#save').click(function(){
@@ -54,7 +47,7 @@ $(document).ready(function(){
 		}, 1000);
 	});
 	$('#reset').click(function(){
-		eraseOptions();
-		$('#name').css({"border" : "3px solid #fff"});
+		$('#name').css({"border" : "3px solid grey"});
+		document.getElementById("name").value = "";
 	});
 });

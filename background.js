@@ -8,7 +8,10 @@ chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
 		  var jsonResponse = JSON.parse(x.response);
 		  var obj = [];
 		  for (var i= 0; i< jsonResponse.items.length; i++){
-		  	obj.push({"name" : jsonResponse.items[i].summary, "selected" : false, "id": jsonResponse.items[i].id});
+		  	if (i == 0)
+		  		obj.push({"name" : jsonResponse.items[i].summary, "selected" : true, "id": jsonResponse.items[i].id});
+		  	else 
+		  		obj.push({"name" : jsonResponse.items[i].summary, "selected" : false, "id": jsonResponse.items[i].id});
 		  }
 		  localStorage['myCals'] = JSON.stringify(obj);
 		  cal = obj;

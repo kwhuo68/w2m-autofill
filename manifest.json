@@ -1,7 +1,7 @@
 {
   "name": "When2Meet Autofill",
   "description": "Autofills your when2meets using you Google Calendar",
-  "version": "0.2",
+  "version": "0.5",
   "permissions": ["contextMenus", "identity", "activeTab", "tabs", "http://*/*", "https://*/*"],
   "manifest_version": 2,
   "background": {
@@ -12,12 +12,12 @@
     "default_icon": "calculator-16.png"
   },
   "oauth2": {
-    "client_id": "956653605342-n40pn5h56pcm3cpn5f1etmj5ejkik0n6.apps.googleusercontent.com",
+    "client_id": "",
 
     "scopes": ["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/calendar.readonly"]
   },
   "content_scripts": [{ "matches": ["*://www.when2meet.com/?*"],
       "js": ["jquery-2.1.1.min.js", "temp.js"],"run_at": "document_start"}],
-  "icons": { "16": "calculator-16.png", "128": "calculator-128.png" },
+  "icons": { "16": "icon-16.png", "128": "icon-128.png" },
   "options_page" : "options.html"
 }
